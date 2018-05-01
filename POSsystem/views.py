@@ -41,10 +41,10 @@ def user_login(request):
 
 def userlogout(request):
     logout(request)
-    return redirect("welcome")
+    return redirect("main")
 
 def welcome(request):
 	if not request.user.is_authenticated:
-		return render(request, "welcome.html", {})
+		return render(request, "main.html", {})
 	else:
-		return render(request, "welcome2.html", {})
+		return render(request, "main.html", {})
