@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  Profile Page
+{% endblock %}
+
+{% block content %}
+
+<p>Welcome {{user.username}}</p>
+	{% for restaurant in restaurants %}
+	<div class="card-deck ml-3 mt-3 ">
+	  <div class="card col-md-4">
+	    <img classname="img" src={{restaurant.image}} alt="Card image cap">
+	    <div class="card-body">
+	      <h5 class="card-title"> <strong> {{restaurant.name}} </strong></h5>
+	      <p class="card-text"><strong>Description :</strong> {{restaurant.description}}</p>
+	      <p class="card-text"><small class="text-muted">Established Date : {{restaurant.established}}</small></p>
+	    </div>
+	  </div>
+	</div>
+	 {% endfor %}
+
+	<a href="{% url 'create_rest' %}"><button type="button" class="ml-3 mr-5 mt-5 btn btn-primary btn-lg">Create New Business</button></a>
+
+
+
+
+
+
+{% endblock content %}

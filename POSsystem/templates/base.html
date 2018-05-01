@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+{% load static %}
   <head>
 
     <meta charset="utf-8">
@@ -15,30 +15,34 @@
     </title>
 
     <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/shop-homepage.css" rel="stylesheet">
+    <link href="{% static 'css/shop-homepage.css' %}" rel="stylesheet">
 
   </head>
 
   <body>
     {% block content %}
+       <div class="container" >
 
+       </div>
     {% endblock content %}
     
 
     <!-- Footer -->
-    <footer class="py-5 bg-dark">
+    <div class="row">
+    <footer class="mt-5 bg-dark col-md-12 col-sm-12 sticky-bottom" >
       <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Mudeer 2018</p>
+        <p class="text-center text-white mt-3">Copyright &copy; Mudeer 2018</p>
       </div>
       <!-- /.container -->
     </footer>
+    </div>
 
     <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
   </body>
 
