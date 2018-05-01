@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from POSsystem import views 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('welcome/', views.welcome, name="welcome"),
+    path('welcome2/', views.welcome, name="welcome2"),
+    path('register/', views.user_register, name="register"),
+    path('login/', views.user_login, name="login"),
+	path('logout/', views.userlogout, name='logout'),
 ]
