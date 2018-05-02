@@ -1,0 +1,26 @@
+
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block tilte %}
+Create Category
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	<br>
+	<h2> Adding category to a restaurant :</h2>
+	<br>
+	<div class="col-md-12">
+		<h1 class="mt-5 ml-3"><strong>Restaurant name : {{restaurant_obj.name}}</strong></h1>
+	</div>
+	<br>
+	<form action="{% url 'addCategory' restaurant_id=restaurant_obj.id %}" method="POST">
+		{% csrf_token %}
+		{{category_form|crispy}}
+		<input type="submit" name="save" value="Save & Add Another">
+		<input type="submit" name="create" value="Save">
+	</form>
+</div>
+{% endblock content %}

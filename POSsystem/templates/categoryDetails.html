@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  Category detail
+{% endblock %}
+
+{% block content %}
+
+<p>Category Name : {{category.name}}</p>
+
+
+	
+	{% for item in category %}
+	
+	<div class="card-deck ml-3 mt-3 ">
+	  <div class="card col-md-4">
+	    
+	    <div class="card-body">
+	      <h5 class="card-title"> <strong> {{item.name}} </strong></h5>
+	      <p class="card-text"><strong>Description :</strong> {{item.description}}</p>
+	      <p class="card-text"><small class="text-muted">Price : {{item.price}} KWD</small></p>
+	    </div>
+	  </div>
+	</div>
+	
+	 {% endfor %}
+
+	<a href="{% url 'detail' restaurant_id=category.restaurant.id %}"><button type="button" class="ml-3 mr-5 mt-5 btn btn-primary btn-lg">Back</button></a>
+
+
+
+
+
+
+{% endblock content %}

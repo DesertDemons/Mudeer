@@ -3,20 +3,21 @@
 {% load crispy_forms_tags %}
 
 {% block tilte %}
-Create Restaurant
+Create item
 {% endblock %}
 
 {% block content %}
 <div class="container">
 	<br>
-	<h2> Creating new restaurant :</h2>
+	<h2> Adding item to a category :</h2>
 	<br>
+	<div class="col-md-12">
+		<h1 class="mt-5 ml-3"><strong>Category name : {{category_obj.name}}</strong></h1>
+	</div>
 	<br>
-	<form action="{% url 'create_rest' %}" method="POST">
+	<form action="{% url 'addItem' category_id=category_obj.id %}" method="POST">
 		{% csrf_token %}
-		<div class="jumbotron">
-			{{restaurant_form|crispy}}
-		</div>
+		{{item_form|crispy}}
 		<input type="submit" name="save" value="Save & Add Another">
 		<input type="submit" name="create" value="Save">
 	</form>

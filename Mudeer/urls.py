@@ -23,14 +23,18 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('main/', views.welcome, name="main"),
     path('profile/', views.profile, name='profile_page'),
+    path('detail/<int:restaurant_id>/', views.business_detail, name='detail'),
+    path('addCategory/<int:restaurant_id>/', views.addCategory, name='addCategory'),
+    path('addItem/<int:category_id>/', views.addItem, name='addItem'),
+    path('categoryDetails/<int:category_id>/', views.categoryDetails, name='categoryDetails'),
     # path('welcome2/', views.welcome, name="welcome2"),
 
-    # User related URLS
+    # User authentication related URLS
     path('register/', views.user_register, name="register"),
     path('login/', views.user_login, name="login"),
 	path('logout/', views.userlogout, name='logout'),
 
-	
+
 	path('create/', views.create, name="create_rest"),
 
 ]

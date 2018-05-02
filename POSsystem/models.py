@@ -17,7 +17,8 @@ class Category(models.Model):
 	restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 	name = models.CharField(max_length=25)
 
-
+	def __str__(self):
+		return "Name: " + self.name 
 
 
 ##### Here should be an item model with relation of ManyToOne to Restaurant
@@ -29,7 +30,8 @@ class Item(models.Model):
 	description = models.TextField()
 	price = models.DecimalField(max_digits=5, decimal_places=3)
 
-
+	def __str__(self):
+		return "Name: " + self.name 
 
 
 
