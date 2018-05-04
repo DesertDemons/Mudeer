@@ -11,17 +11,18 @@
 
 
 	
-	{% for item in category %}
+	{% for item in category.item_set.all %}
 	
 	<div class="card-deck ml-3 mt-3 ">
 	  <div class="card col-md-4">
-	    
 	    <div class="card-body">
 	      <h5 class="card-title"> <strong> {{item.name}} </strong></h5>
 	      <p class="card-text"><strong>Description :</strong> {{item.description}}</p>
-	      <p class="card-text"><small class="text-muted">Price : {{item.price}} KWD</small></p>
+	      <p class="card-text text-danger"><small class="">Price : {{item.price}} KWD</small></p>
 	    </div>
 	  </div>
+	  <a href="{% url 'update_item' item_id=item.id %}"><button type="button" class="ml-5 mt-5 mx-auto btn btn-primary">Edit Item</button></a>
+	  
 	</div>
 	
 	 {% endfor %}

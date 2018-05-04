@@ -21,12 +21,18 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('main/', views.welcome, name="main"),
+    path('welcome/', views.welcome, name="welcome"),
     path('profile/', views.profile, name='profile_page'),
     path('detail/<int:restaurant_id>/', views.business_detail, name='detail'),
-    path('addCategory/<int:restaurant_id>/', views.addCategory, name='addCategory'),
-    path('addItem/<int:category_id>/', views.addItem, name='addItem'),
+
     path('categoryDetails/<int:category_id>/', views.categoryDetails, name='categoryDetails'),
+    path('addCategory/<int:restaurant_id>/', views.addCategory, name='addCategory'),
+    path('update_category/<int:category_id>/', views.updateCategory, name='update_category'),
+
+
+    path('addItem/<int:category_id>/', views.addItem, name='addItem'),
+    path('update_item/<int:item_id>/', views.updateItem, name='update_item'),
+    
     # path('welcome2/', views.welcome, name="welcome2"),
 
     # User authentication related URLS
@@ -36,6 +42,8 @@ urlpatterns = [
 
 
 	path('create/', views.create, name="create_rest"),
+	path('update/<int:restaurant_id>/', views.update, name="update_rest"),
+
 
 ]
 

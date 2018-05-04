@@ -3,7 +3,6 @@ from .forms import UserRegisterForm, LoginForm, RestaurantForm, CategoryForm, It
 from django.contrib.auth import authenticate, login, logout
 from .models import Restaurant, Category, Item 
 
-# Create your views here.
 
 
 def user_register(request):
@@ -12,7 +11,6 @@ def user_register(request):
 		form = UserRegisterForm(request.POST)
 		if form.is_valid():
 			user = form.save()
-			# user = form.save(commit=False)
 			my_user = user.username
 			my_password = user.password
 			user.set_password(user.password)
@@ -49,7 +47,7 @@ def welcome(request):
 	if not request.user.is_authenticated:
 		return render(request, "main.html", {})
 	else:
-		return render(request, "profile_page.html", {})
+		return redirect("profile_page")
 
 
 def profile(request):
@@ -86,30 +84,48 @@ def business_detail(request, restaurant_id):
 
 def create(request):
 	restaurant_form = RestaurantForm()
-	# category_form = CategoryForm()
-	# item_form = ItemForm()
+	
 
 	if request.method == "POST":
 		restaurant_form = RestaurantForm(request.POST)
-		### These prints are to test which button was clicked!! yes we are watching YOU!!!
-		# print (request.POST.get("save"))
-		# print (request.POST.get("create"))
-		# category_form = CategoryForm(request.POST, prefix='category_name') 
-		# item_form = ItemForm(request.POST, prefix='item_name')
-		if restaurant_form.is_valid():# and category_form.is_valid() and item_form.is_valid():
+		if restaurant_form.is_valid():
 			restaurant = restaurant_form.save(commit=False)
 			restaurant.owner=request.user
 			restaurant.save()
-			# category_form.save()
-			# item_form.save()
+			
 
 			return redirect("profile_page")
 	context = {
 		"restaurant_form": restaurant_form,
-		# "category_form": category_form,
-		# "item_form": item_form,
+		
 	}
 	return render(request, 'create_rest.html', context)
+
+def update(request, restaurant_id):
+	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
+	if not(request.user.is_staff or request.user==restaurant_obj.owner):
+		return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+	form = RestaurantForm(instance=restaurant_obj)
+	if request.method == "POST":
+		form = RestaurantForm(request.POST, instance=restaurant_obj)
+		if request.POST.get("cancle"):
+				return redirect("profile_page")
+		else:
+			form.is_valid()
+			form.save()
+			return redirect("profile_page")
+	context = {
+		"form": form,
+		"restaurant_obj": restaurant_obj,
+	}
+	return render(request, 'update_rest.html', context)
+
+
+def categoryDetails(request, category_id):
+	context = {
+		"category": Category.objects.get(id=category_id)
+		}
+	return render(request, 'categoryDetails.html', context) 
 
 
 
@@ -131,21 +147,30 @@ def addCategory(request, restaurant_id):
 			# if user clicked on "save" button he will be redirected to the restaurant detail page
 				return redirect("detail",restaurant_id=restaurant_obj.id)
 		
-		
-
 	context = {
 		"restaurant_obj": restaurant_obj,
 		"category_form": category_form,
 	}
 	return render(request, 'addCategory.html', context)
 
-
-def categoryDetails(request, category_id):
+def updateCategory(request, category_id):
+	category_obj = Category.objects.get(id=category_id)
+	if not(request.user.is_staff or request.user==category_obj.restaurant.owner):
+		return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+	form = CategoryForm(instance=category_obj)
+	if request.method == "POST":
+		form = CategoryForm(request.POST, instance=category_obj)
+		if request.POST.get("cancle"):
+				return redirect("detail",restaurant_id=category_obj.restaurant.id)
+		else:
+			form.is_valid()
+			form.save()
+			return redirect("detail",restaurant_id=category_obj.restaurant.id)
 	context = {
-		"category": Category.objects.get(id=category_id)
-		}
-	return render(request, 'categoryDetails.html', context) 
-
+		"form": form,
+		"category_obj": category_obj,
+	}
+	return render(request, 'update_category.html', context)
 
 
 def addItem(request, category_id):
@@ -153,8 +178,6 @@ def addItem(request, category_id):
 	item_form = ItemForm()
 	if request.method == "POST":
 		item_form = ItemForm(request.POST)
-		
-		
 		if item_form.is_valid():
 			item = item_form.save(commit=False)
 			item.category = category_obj
@@ -164,13 +187,32 @@ def addItem(request, category_id):
 				return redirect("addItem", category_id=category_obj.id)
 			else:
 			# if user clicked on "save" button he will be redirected to the restaurant detail page
-				return redirect("this should be page of category details",category_id=category_obj.id)
-		
-		
-
+				return redirect("detail",restaurant_id=category_obj.restaurant.id)
+	
 	context = {
 		"category_obj": category_obj,
 		"item_form": item_form,
 	}
 	return render(request, 'addItem.html', context)
+
+def updateItem(request, item_id):
+	item_obj = Item.objects.get(id=item_id)
+	if not(request.user.is_staff or request.user==item_obj.category.restaurant.owner):
+		return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+	form = ItemForm(instance=item_obj)
+	if request.method == "POST":
+		form = ItemForm(request.POST, instance=item_obj)
+		if request.POST.get("cancle"):
+				return redirect("detail",restaurant_id=item_obj.category.restaurant.id)
+		else:
+			form.is_valid()
+			form.save()
+			return redirect("detail",restaurant_id=item_obj.category.restaurant.id)
+	context = {
+		"form": form,
+		"item_obj": item_obj,
+	}
+	return render(request, 'update_item.html', context)
+
+
 
