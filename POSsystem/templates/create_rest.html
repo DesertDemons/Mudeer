@@ -9,16 +9,19 @@ Create Restaurant
 {% block content %}
 <div class="container">
 	<br>
-	<h2> Creating new restaurant :</h2>
-	<br>
-	<br>
+	
+	<div class="col-md-12 bg-dark mt-3 md-3 px-3 p-3">
+	<div class="jumbotron border border-danger">
+		<h2> Creating new restaurant :</h2>
 	<form action="{% url 'create_rest' %}" method="POST">
 		{% csrf_token %}
 		<div class="jumbotron">
 			{{restaurant_form|crispy}}
+			<input type="submit" name="create" value="Save">
 		</div>
-		<input type="submit" name="save" value="Save & Add Another">
-		<input type="submit" name="create" value="Save">
+		
 	</form>
+</div>
+</div>
 </div>
 {% endblock content %}

@@ -8,20 +8,21 @@ Restaurant Update
 
 {% block content %}
 <div class="container">
-	<br>
-	<h2> Updating category :</h2>
-	<br>
+	
 	<div class="col-md-12">
 		<h1 class="mt-5 ml-3"><strong>Category name : {{category_obj.name}}</strong></h1>
 	</div>
 	<br>
-	<div class="jumbotron border border-danger">
-	<form action="{% url 'update_category' category_id=category_obj.id %}" method="POST">
+	<div class="col-md-12 bg-dark mt-3 md-3 px-3 p-3">
+		<form class="jumbotron border border-primary" action="{% url 'update_category' category_id=category_obj.id %}" method="POST">
+			<h2> Updating category :</h2>
+	<br>
 		{% csrf_token %}
 		{{form|crispy}}
 		<input type="submit" name="Update">
 		<input type='submit' name="cancle" value="Cancle">
 	</form>
+</div>
 </div>
 </div>
 {% endblock content %}

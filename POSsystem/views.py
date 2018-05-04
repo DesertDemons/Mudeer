@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import UserRegisterForm, LoginForm, RestaurantForm, CategoryForm, ItemForm
 from django.contrib.auth import authenticate, login, logout
 from .models import Restaurant, Category, Item 
-
+import sys
 
 
 def user_register(request):
@@ -41,7 +41,7 @@ def user_login(request):
 
 def userlogout(request):
     logout(request)
-    return redirect("main")
+    return redirect("welcome")
 
 def welcome(request):
 	if not request.user.is_authenticated:
@@ -119,6 +119,15 @@ def update(request, restaurant_id):
 		"restaurant_obj": restaurant_obj,
 	}
 	return render(request, 'update_rest.html', context)
+
+def delete(request, restaurant_id):
+	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
+	if not (request.user.is_staff or request.user==restaurant_obj.owner):
+		return HttpResponse("<h1>You don't have the permission to delete the restaurant</h1>")
+	#if(query_yes_no("Are you sure you want to delete?"),""):
+	Restaurant.objects.get(id=restaurant_id).delete()
+	
+	return redirect("profile_page")
 
 
 def categoryDetails(request, category_id):
@@ -215,4 +224,33 @@ def updateItem(request, item_id):
 	return render(request, 'update_item.html', context)
 
 
+
+import ctypes  # An included library with Python install.
+def Mbox(title, text, style):
+    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+
+
+#Just testing to ask user yes or no question 
+def query_yes_no(question, default="yes"):
+    valid = {"yes":True,   "y":True,  "ye":True,
+             "no":False,     "n":False}
+    if default == None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "\
+                             "(or 'y' or 'n').\n")
 
