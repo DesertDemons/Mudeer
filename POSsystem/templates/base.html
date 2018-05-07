@@ -47,7 +47,7 @@
             </li>
             <li>
             {% if "/detail/" in request.path %}
-            <a class="nav-link btn btn-outline-primary ml-3" href="{% url 'ordering_page' restaurant_id=restaurant_obj.id %}"> Ordering Page</a>
+            <a class="nav-link btn btn-outline-primary ml-3 text-white" href="{% url 'ordering_page' restaurant_id=restaurant_obj.id %}"> Ordering Page</a>
             {% endif %} 
             </li>
           </ul>
@@ -95,9 +95,6 @@
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
 

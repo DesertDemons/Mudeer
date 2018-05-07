@@ -20,6 +20,7 @@ class RestaurantForm(forms.ModelForm):
 	class Meta:
 		model = Restaurant
 		fields = '__all__'
+		exclude =['owner']
 
 class CategoryForm(forms.ModelForm):
 	class Meta:

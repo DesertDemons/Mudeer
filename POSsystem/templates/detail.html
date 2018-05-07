@@ -28,11 +28,9 @@ Buisiness Detail
 			<div class="jumbotron border border-success">
 			<h1 class="alert alert-success mx-auto">[{{category.name}}]</h1>
 				<a href="{% url 'update_category' category_id=category.id %}"><button type="button" class="ml-5 mx-auto btn btn-primary btn-lg fas fa-cogs">  Edit Category Name</button></a>
-				<!--<a href="{% url 'delete_category' category_id=category.id %}">-->
 					<button type="button" class="ml-5 mx-auto btn btn-danger btn-lg fas fa-trash-alt" data-toggle="modal" data-target="#deleteModal-{{category.id}}">
 						DELETE
 					</button>
-				<!--</a>-->
 				<div class="modal fade" id="deleteModal-{{category.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog" role="document">
 				    <div class="modal-content">

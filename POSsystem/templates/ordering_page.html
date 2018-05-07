@@ -10,8 +10,43 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 
+
+      <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if list %}
+            {% for product in list %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price }} KWD</td>
+                <td>
+                    <a role="button" class="btn btn-danger"
+                     href="javascript:void(0);" onclick='removeItem("{{ item.id }}");'>
+                       <i class="fas fa-trash-alt"> Delete</i>
+                     </a>
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+            <tr>
+                <th scope="row">Total</th>
+                <td>{{ total_price }} KWD</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+
  
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs mt-5">
     {% for category in restaurant.category_set.all %}
     {% if forloop.first %}
     <li class="active"><a data-toggle="tab" href="#name-{{category.name}}">{{category.name}}</a></li>
@@ -70,4 +105,10 @@
       {% endfor %}
     </div>
   
+  <script>
+    
+  </script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 {% endblock %}

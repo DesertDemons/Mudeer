@@ -19,9 +19,9 @@ Create item
 	<br>
 		{% csrf_token %}
 		{{item_form|crispy}}
-		<input type="submit" name="save" value="Save & Add Another">
-		<input type="submit" name="create" value="Save">
-		<input type='submit' name="cancle" value="Cancle">
+		<input type="submit" name="save" value="Save & Add Another" class="btn btn-primary">
+		<input type="submit" name="create" value="Save" class="btn btn-success">
+		<a href="{% url 'detail' category_obj.restaurant.id %}" class="btn btn-danger">Cancle</a>
 	</form>
 </div>
 </div>

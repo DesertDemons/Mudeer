@@ -17,8 +17,8 @@ Create Restaurant
 		{% csrf_token %}
 		<div class="jumbotron">
 			{{restaurant_form|crispy}}
-			<input type="submit" name="create" value="Save">
-			<input type='submit' name="cancle" value="Cancle">
+			<input type="submit" name="create" value="Save" class="btn btn-success">
+			<a href="{% url 'profile_page' %}" class="btn btn-danger">Cancle</a>
 		</div>
 		
 	</form>

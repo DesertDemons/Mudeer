@@ -12,16 +12,13 @@ class Restaurant(models.Model):
 		return "Name: [" + self.name + "] " + self.description
 
 
-##### Should make category model with relation of ManyToOne to Restaurant
+
 class Category(models.Model):
 	restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 	name = models.CharField(max_length=25)
 
 	def __str__(self):
 		return "Name: " + self.name 
-
-
-##### Here should be an item model with relation of ManyToOne to Restaurant
 
 
 class Item(models.Model):

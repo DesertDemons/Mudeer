@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import UserRegisterForm, LoginForm, RestaurantForm, CategoryForm, ItemForm
 from django.contrib.auth import authenticate, login, logout
 from .models import Restaurant, Category, Item 
-import sys
+from django.http import Http404
+
 
 
 def user_register(request):
@@ -52,13 +53,13 @@ def welcome(request):
 
 def profile(request):
 	restaurants = Restaurant.objects.all()
-	# order objects by name and date of  established
 	restaurants = restaurants.order_by('name', 'established')
-	# for search functionality 
+	owner_name = request.user
+	if not(request.user.is_staff):
+		restaurants = restaurants.filter(owner=owner_name)
 	query = request.GET.get('q')
 	if query:
 		restaurants = restaurants.filter(name__contains=query)
-	# if user not logged in he can't see the profile page
 	if request.user.is_anonymous:
 		return redirect('login')
 
@@ -68,13 +69,7 @@ def profile(request):
 	return render(request, 'profile_page.html', context)
 
 def business_detail(request, restaurant_id):
-	# To get the restaurant you choose
 	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
-
-	#### This is for html page to get categories and items from restaurant
-	# for category in restaurant_obj.category_set.all():
-	# 	for item in category.item_set.all():
-
 	context = {
 		"restaurant_obj": restaurant_obj,
 	}
@@ -85,10 +80,8 @@ def business_detail(request, restaurant_id):
 def create(request):
 	restaurant_form = RestaurantForm()
 	if request.method == "POST":
-		if request.POST.get("cancle"):
-				return redirect("profile_page")
-		else:
-			restaurant_form.is_valid()
+		restaurant_form = RestaurantForm(request.POST)
+		if restaurant_form.is_valid():
 			restaurant = restaurant_form.save(commit=False)
 			restaurant.owner=request.user
 			restaurant.save()
@@ -104,7 +97,8 @@ def create(request):
 def update(request, restaurant_id):
 	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
 	if not(request.user.is_staff or request.user==restaurant_obj.owner):
-		return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+		# return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+		raise Http404("You don't have permission")
 	form = RestaurantForm(instance=restaurant_obj)
 	if request.method == "POST":
 		form = RestaurantForm(request.POST, instance=restaurant_obj)
@@ -123,8 +117,8 @@ def update(request, restaurant_id):
 def delete(request, restaurant_id):
 	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
 	if not (request.user.is_staff or request.user==restaurant_obj.owner):
-		return HttpResponse("<h1>You don't have the permission to delete the restaurant</h1>")
-	#if(query_yes_no("Are you sure you want to delete?"),""):
+		# return HttpResponse("<h1>You don't have the permission to delete the restaurant</h1>")
+		raise Http404("You don't have permission")
 	Restaurant.objects.get(id=restaurant_id).delete()
 	
 	return redirect("profile_page")
@@ -150,10 +144,8 @@ def addCategory(request, restaurant_id):
 			category.restaurant = restaurant_obj
 			category.save()
 			if request.POST.get("save"):
-			# But if the user clicked on "save and add another" button he will have another category form to fill
 				return redirect("addCategory", restaurant_id=restaurant_obj.id)
 			else:
-			# if user clicked on "save" button he will be redirected to the restaurant detail page
 				return redirect("detail",restaurant_id=restaurant_obj.id)
 		
 	context = {
@@ -165,7 +157,8 @@ def addCategory(request, restaurant_id):
 def updateCategory(request, category_id):
 	category_obj = Category.objects.get(id=category_id)
 	if not(request.user.is_staff or request.user==category_obj.restaurant.owner):
-		return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+		# return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+		raise Http404("You don't have permission")
 	form = CategoryForm(instance=category_obj)
 	if request.method == "POST":
 		form = CategoryForm(request.POST, instance=category_obj)
@@ -184,8 +177,8 @@ def updateCategory(request, category_id):
 def delete_category(request, category_id):
 	category_obj = Category.objects.get(id=category_id)
 	if not (request.user.is_staff or request.user==category_obj.restaurant.owner):
-		return HttpResponse("<h1>You don't have the permission to delete the restaurant</h1>")
-	#if(query_yes_no("Are you sure you want to delete?"),""):
+		# return HttpResponse("<h1>You don't have the permission to delete the restaurant</h1>")
+		raise Http404("You don't have permission")
 	Category.objects.get(id=category_id).delete()
 	
 	return redirect("detail",restaurant_id=category_obj.restaurant.id)
@@ -201,10 +194,8 @@ def addItem(request, category_id):
 			item.category = category_obj
 			item.save()
 			if request.POST.get("save"):
-			# But if the user clicked on "save and add another" button he will have another item form to fill
 				return redirect("addItem", category_id=category_obj.id)
 			else:
-			# if user clicked on "save" button he will be redirected to the restaurant detail page
 				return redirect("detail",restaurant_id=category_obj.restaurant.id)
 
 	
@@ -217,7 +208,8 @@ def addItem(request, category_id):
 def updateItem(request, item_id):
 	item_obj = Item.objects.get(id=item_id)
 	if not(request.user.is_staff or request.user==item_obj.category.restaurant.owner):
-		return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+		# return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+		raise Http404("You don't have permission")
 	form = ItemForm(instance=item_obj)
 	if request.method == "POST":
 		form = ItemForm(request.POST, instance=item_obj)
@@ -236,8 +228,8 @@ def updateItem(request, item_id):
 def delete_item(request, item_id):
 	item_obj = Item.objects.get(id=item_id)
 	if not (request.user.is_staff or request.user==item_obj.item.restaurant.owner):
-		return HttpResponse("<h1>You don't have the permission to delete the restaurant</h1>")
-	#if(query_yes_no("Are you sure you want to delete?"),""):
+		# return HttpResponse("<h1>You don't have the permission to delete the restaurant</h1>")
+		raise Http404("You don't have permission")
 	Item.objects.get(id=item_id).delete()
 	
 	return redirect("detail",restaurant_id=item_obj.category.restaurant.id)
@@ -248,33 +240,8 @@ def ordering_page(request,restaurant_id):
 	context = {
 		"restaurant": restaurant_obj,
 	}
-	
 	return render(request, 'ordering_page.html', context)
 
 
 
-
-#Just testing to ask user yes or no question 
-def query_yes_no(question, default="yes"):
-    valid = {"yes":True,   "y":True,  "ye":True,
-             "no":False,     "n":False}
-    if default == None:
-        prompt = " [y/n] "
-    elif default == "yes":
-        prompt = " [Y/n] "
-    elif default == "no":
-        prompt = " [y/N] "
-    else:
-        raise ValueError("invalid default answer: '%s'" % default)
-
-    while True:
-        sys.stdout.write(question + prompt)
-        choice = input().lower()
-        if default is not None and choice == '':
-            return valid[default]
-        elif choice in valid:
-            return valid[choice]
-        else:
-            sys.stdout.write("Please respond with 'yes' or 'no' "\
-                             "(or 'y' or 'n').\n")
 

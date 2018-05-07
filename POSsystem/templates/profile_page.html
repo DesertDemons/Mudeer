@@ -35,7 +35,7 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				        <a href="{% url 'delete_rest' restaurant_id=restaurant.id %}">
+				        <a href="{% url 'delete_rest' restaurant.id %}">
 				        	<button type="button" class="btn btn-danger">
 				        	Delete
 				        	</button>
@@ -46,10 +46,6 @@
 				</div>
 
 
-
-
-
-
 	  	<a href="{% url 'detail' restaurant_id=restaurant.id %}">
 	    <img class="card-img-top" src={{restaurant.image}} alt="Card image cap">
 	    <div class="card-body">
@@ -58,6 +54,9 @@
 	    </div>
 	      <div class="card-footer">
 	      	<small class="text-muted">Established Date : {{restaurant.established}}</small>
+	      </div>
+	      <div class="card-footer">
+	      	<small class="text-muted">Owner : {{restaurant.owner}}</small>
 	      </div>
 	  </a>
 	</div>
