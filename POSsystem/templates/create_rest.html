@@ -13,7 +13,7 @@ Create Restaurant
 	<div class="col-md-12 bg-dark md-3 px-3 p-3">
 	<div class="jumbotron border border-danger">
 		<h2> Creating a new restaurant :</h2>
-	<form action="{% url 'create_rest' %}" method="POST">
+	<form action="{% url 'create_rest' %}" method="POST" enctype="multipart/form-data">
 		{% csrf_token %}
 		<div class="jumbotron">
 			{{restaurant_form|crispy}}

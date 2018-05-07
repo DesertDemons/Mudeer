@@ -80,7 +80,7 @@ def business_detail(request, restaurant_id):
 def create(request):
 	restaurant_form = RestaurantForm()
 	if request.method == "POST":
-		restaurant_form = RestaurantForm(request.POST)
+		restaurant_form = RestaurantForm(request.POST, request.FILES)
 		if restaurant_form.is_valid():
 			restaurant = restaurant_form.save(commit=False)
 			restaurant.owner=request.user
