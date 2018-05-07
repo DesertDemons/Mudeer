@@ -16,7 +16,40 @@
 	<div class="card-deck mt-3 flex-fill">
 	  <div class="card ">
 	  	<a href="{% url 'update_rest' restaurant_id=restaurant.id %}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="To Delete this Restaurant"><i class="fas fa-cogs">  Edit</i></a>
-	  	<a href="{% url 'delete_rest' restaurant_id=restaurant.id %}" class="btn btn-danger mt-1 mb-2" data-toggle="tooltip" data-placement="top" title="To Delete this Restaurant"><i class="fas fa-trash-alt">  DELETE</i></a>
+	  	
+
+	  	<a href="{% url 'delete_rest' restaurant_id=restaurant.id %}" class="btn btn-danger mt-1 mb-2" data-toggle="modal" data-target="#deleteModal-{{restaurant.id}}">
+	  		<i class="fas fa-trash-alt">
+	  		  DELETE
+	  		</i>
+	  	</a>
+	  	
+	  	<div class="modal fade" id="deleteModal-{{restaurant.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="exampleModalLabel">Do you want to Delete {{restaurant.name}}?</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				        <a href="{% url 'delete_rest' restaurant_id=restaurant.id %}">
+				        	<button type="button" class="btn btn-danger">
+				        	Delete
+				        	</button>
+				        </a>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+
+
+
+
+
+
 	  	<a href="{% url 'detail' restaurant_id=restaurant.id %}">
 	    <img class="card-img-top" src={{restaurant.image}} alt="Card image cap">
 	    <div class="card-body">
@@ -38,8 +71,8 @@
 
 
 	 <div class="col-sm-12 col-md-12 col-lg-12 mt-5 mb-5">
-			<div class="mx-auto" style="width: 200px;">
-				<a href="{% url 'create_rest' %}"><button type="button" class="ml-3 mr-5 mt-5 btn btn-success btn-lg"><i class="fas fa-plus-circle">  Create New Business</i></button></a>
+			<div class="mx-auto" style="width: 255px;">
+				<a href="{% url 'create_rest' %}"><button type="button" class="ml-3 mr-5 mt-5 mb-5 btn btn-success btn-lg"><i class="fas fa-plus-circle">  Create New Business</i></button></a>
 			</div>
 		</div>
 	</div>

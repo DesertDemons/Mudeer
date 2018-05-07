@@ -11,18 +11,17 @@ Create Category
 <div class="container">
 	<br>
 	<h2> Adding category to a restaurant :</h2>
-	<br>
-	<div class="col-md-12">
-		<h1 class="mt-5 ml-3"><strong>Restaurant name : {{restaurant_obj.name}}</strong></h1>
-	</div>
-	<br>
+	
 	<div class="col-md-12 bg-dark mt-3 md-3 px-3 p-3">
-	<form action="{% url 'addCategory' restaurant_id=restaurant_obj.id %}" method="POST">
+		<form class="jumbotron border border-primary" action="{% url 'addCategory' restaurant_id=restaurant_obj.id %}" method="POST">
+			<div class="col-md-12">
+				<h1 class="ml-3"><strong>Restaurant name : {{restaurant_obj.name}}</strong></h1>
+			</div>
 		{% csrf_token %}
 		{{category_form|crispy}}
-		<input type="submit" name="save" value="Save & Add Another">
-		<input type="submit" name="create" value="Save">
-		<input type='submit' name="cancle" value="Cancle">
+		<input type="submit" name="save" value="Save & Add Another" class="btn btn-danger">
+		<input type="submit" name="create" value="Save" class="btn btn-danger">
+		<a href="{% url 'detail' restaurant_obj.id %}" class="btn btn-danger">Cancle</a>
 	</form>
 </div>
 </div>

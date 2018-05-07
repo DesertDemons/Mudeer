@@ -84,11 +84,11 @@ def business_detail(request, restaurant_id):
 
 def create(request):
 	restaurant_form = RestaurantForm()
-	
-
 	if request.method == "POST":
-		restaurant_form = RestaurantForm(request.POST)
-		if restaurant_form.is_valid():
+		if request.POST.get("cancle"):
+				return redirect("profile_page")
+		else:
+			restaurant_form.is_valid()
 			restaurant = restaurant_form.save(commit=False)
 			restaurant.owner=request.user
 			restaurant.save()
@@ -181,6 +181,15 @@ def updateCategory(request, category_id):
 	}
 	return render(request, 'update_category.html', context)
 
+def delete_category(request, category_id):
+	category_obj = Category.objects.get(id=category_id)
+	if not (request.user.is_staff or request.user==category_obj.restaurant.owner):
+		return HttpResponse("<h1>You don't have the permission to delete the restaurant</h1>")
+	#if(query_yes_no("Are you sure you want to delete?"),""):
+	Category.objects.get(id=category_id).delete()
+	
+	return redirect("detail",restaurant_id=category_obj.restaurant.id)
+
 
 def addItem(request, category_id):
 	category_obj = Category.objects.get(id=category_id)
@@ -197,6 +206,7 @@ def addItem(request, category_id):
 			else:
 			# if user clicked on "save" button he will be redirected to the restaurant detail page
 				return redirect("detail",restaurant_id=category_obj.restaurant.id)
+
 	
 	context = {
 		"category_obj": category_obj,
@@ -223,11 +233,25 @@ def updateItem(request, item_id):
 	}
 	return render(request, 'update_item.html', context)
 
+def delete_item(request, item_id):
+	item_obj = Item.objects.get(id=item_id)
+	if not (request.user.is_staff or request.user==item_obj.item.restaurant.owner):
+		return HttpResponse("<h1>You don't have the permission to delete the restaurant</h1>")
+	#if(query_yes_no("Are you sure you want to delete?"),""):
+	Item.objects.get(id=item_id).delete()
+	
+	return redirect("detail",restaurant_id=item_obj.category.restaurant.id)
 
 
-import ctypes  # An included library with Python install.
-def Mbox(title, text, style):
-    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+def ordering_page(request,restaurant_id):
+	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
+	context = {
+		"restaurant": restaurant_obj,
+	}
+	
+	return render(request, 'ordering_page.html', context)
+
+
 
 
 #Just testing to ask user yes or no question 
