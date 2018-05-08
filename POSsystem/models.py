@@ -30,5 +30,24 @@ class Item(models.Model):
 	def __str__(self):
 		return "Name: " + self.name 
 
+class OrderItem(models.Model):
+	order = models.ForeignKey('Order', on_delete=models.CASCADE)
+	item = models.ForeignKey(Item, on_delete=models.CASCADE)
+	quantity = models.PositiveIntegerField(default=1)
+	item_total = models.DecimalField(decimal_places = 3, max_digits = 6)
 
+class Order(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	items = models.ManyToManyField(Item, through=OrderItem)
+	total = models.DecimalField(max_digits=6, decimal_places=3, default=0.0)
+	dinner = models.BooleanField(default=False)
 
+	# def update_total(self):
+	# 	items = self.orderitem_set.all()
+	# 	for item in items:
+	# 		total += item.item_total
+	# 	self.save()
+
+	
+	def __str__(self):
+		return "user: " + self.user.username

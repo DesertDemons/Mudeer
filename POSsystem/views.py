@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from .forms import UserRegisterForm, LoginForm, RestaurantForm, CategoryForm, ItemForm
 from django.contrib.auth import authenticate, login, logout
-from .models import Restaurant, Category, Item 
-from django.http import Http404
+from .models import Restaurant, Category, Item, Order
+from django.http import Http404, JsonResponse
+from django.db.models import Q
 
 
 
@@ -52,16 +53,18 @@ def welcome(request):
 
 
 def profile(request):
+	if request.user.is_anonymous:
+		return redirect('login')
 	restaurants = Restaurant.objects.all()
 	restaurants = restaurants.order_by('name', 'established')
 	owner_name = request.user
 	if not(request.user.is_staff):
 		restaurants = restaurants.filter(owner=owner_name)
+
 	query = request.GET.get('q')
 	if query:
-		restaurants = restaurants.filter(name__contains=query)
-	if request.user.is_anonymous:
-		return redirect('login')
+		restaurants = restaurants.filter(owner__username__contains=query)
+	
 
 	context = {
 		"restaurants": restaurants,
@@ -102,7 +105,7 @@ def update(request, restaurant_id):
 	form = RestaurantForm(instance=restaurant_obj)
 	if request.method == "POST":
 		form = RestaurantForm(request.POST, instance=restaurant_obj)
-		if request.POST.get("cancle"):
+		if request.POST.get("cancel"):
 				return redirect("profile_page")
 		else:
 			form.is_valid()
@@ -162,7 +165,7 @@ def updateCategory(request, category_id):
 	form = CategoryForm(instance=category_obj)
 	if request.method == "POST":
 		form = CategoryForm(request.POST, instance=category_obj)
-		if request.POST.get("cancle"):
+		if request.POST.get("cancel"):
 				return redirect("detail",restaurant_id=category_obj.restaurant.id)
 		else:
 			form.is_valid()
@@ -213,7 +216,7 @@ def updateItem(request, item_id):
 	form = ItemForm(instance=item_obj)
 	if request.method == "POST":
 		form = ItemForm(request.POST, instance=item_obj)
-		if request.POST.get("cancle"):
+		if request.POST.get("cancel"):
 				return redirect("detail",restaurant_id=item_obj.category.restaurant.id)
 		else:
 			form.is_valid()
@@ -237,10 +240,42 @@ def delete_item(request, item_id):
 
 def ordering_page(request,restaurant_id):
 	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
+
+	order_list = []
+	# items = restaurant_obj.category.item.order_set.all()
+	# for item in items:
+	# 	order_list.append(item)
+
 	context = {
 		"restaurant": restaurant_obj,
+		"order_list": order_list,
 	}
 	return render(request, 'ordering_page.html', context)
+
+def order(request, item_id):
+	item_obj = Item.objects.get(id=item_id)
+	order_obj, created = Order.objects.get_or_create(item=item_obj)
+
+	if created:
+		action="addItem"
+
+	context = {
+		"action": action,
+	}
+	return JsonResponse(context, safe=False)
+
+# def removeItem(request, item_id):
+
+
+
+
+
+
+
+
+
+
+
 
 
 

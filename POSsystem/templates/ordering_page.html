@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 
-
+      {% if 0 %}
       <table class="table">
         <thead>
             <tr>
@@ -20,14 +20,14 @@
             </tr>
         </thead>
         <tbody>
-            {% if list %}
-            {% for product in list %}
+            {% if order_list %}
+            {% for item in order_list %}
             <tr>
                 <td>{{ item.name }}</td>
                 <td>{{ item.price }} KWD</td>
                 <td>
                     <a role="button" class="btn btn-danger"
-                     href="javascript:void(0);" onclick='removeItem("{{ item.id }}");'>
+                     href="javascript:void(0);" onclick='RemoveItem("{{ item.id }}");'>
                        <i class="fas fa-trash-alt"> Delete</i>
                      </a>
                 </td>
@@ -36,16 +36,18 @@
             {% endif %}
             <tr>
                 <th scope="row">Total</th>
-                <td>{{ total_price }} KWD</td>
+                <td>{{ order.total }} KWD</td>
                 <td></td>
             </tr>
         </tbody>
     </table>
+    {% endif %}
+<div id="additiondiv">
+</div>
 
+    <br><br><br>
 
-
-
- 
+    
     <ul class="nav nav-tabs mt-5">
     {% for category in restaurant.category_set.all %}
     {% if forloop.first %}
@@ -68,8 +70,10 @@
                   <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
                   <div class="card-body">
                     <h4 class="card-title">
-                      <a href="#"><strong> {{item.name}} </strong></a>
+                      <button class="btn btn-light" onclick="AddItem({{item.id}})">
+                          <p><strong> {{item.name}} </strong></p>
                     </h4>
+                  </button>
                     <h5>{{item.price}} KWD</h5>
                     <p class="card-text"><strong>Description :</strong> {{item.description}}</p>
                   </div>
@@ -90,8 +94,10 @@
             <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
             <div class="card-body">
               <h4 class="card-title">
-                <a href="#"><strong> {{item.name}} </strong></a>
+                <button class="btn btn-light" onclick="AddItem({{item.id}})">
+                    <p><strong> {{item.name}} </strong></p>
               </h4>
+            </button>
               <h5>{{item.price}} KWD</h5>
               <p class="card-text"><strong>Description :</strong> {{item.description}}</p>
             </div>
@@ -104,10 +110,27 @@
       </div>
       {% endfor %}
     </div>
+
+
+
   
   <script>
-    
-  </script>
+    function AddItem(id){
+      $.ajax({
+        type: "GET",
+        url: "/order/"+id,
+        error:function(){
+          console.log("Error, something went wrong!");
+        },
+        success:function(data){
+          console.log(data);
+          if(data.action==="addItem"){
+            
+          }
+        }
+      })
+    }
+  </script>  
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

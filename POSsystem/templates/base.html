@@ -53,6 +53,14 @@
           </ul>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="nav navbar-nav navbar-right ml-auto">
+            {% if user.is_staff %}
+            <li>
+              <form class="form-inline my-2 my-lg-0 " action="{% url 'profile_page' %}" method="GET">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search for..." aria-label="Search" name="q">
+                <button class="btn btn-primary my-2 my-sm-0 mr-5" type="submit">Search</button>
+              </form>
+            </li>
+            {% endif %}
           {% if not user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link btn btn-outline-primary text-white" href="{% url 'register' %}">Register</a>
