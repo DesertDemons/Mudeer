@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from .forms import UserRegisterForm, LoginForm, RestaurantForm, CategoryForm, ItemForm
 from django.contrib.auth import authenticate, login, logout
-from .models import Restaurant, Category, Item, Order
+from .models import Restaurant, Category, Item, Order, OrderItem
 from django.http import Http404, JsonResponse
 from django.db.models import Q
-
+import json
 
 
 def user_register(request):
@@ -242,7 +242,7 @@ def ordering_page(request,restaurant_id):
 	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
 
 	order_list = []
-	# items = restaurant_obj.category.item.order_set.all()
+	# items = request.user.order_set.all()
 	# for item in items:
 	# 	order_list.append(item)
 
@@ -254,17 +254,36 @@ def ordering_page(request,restaurant_id):
 
 def order(request, item_id):
 	item_obj = Item.objects.get(id=item_id)
-	order_obj, created = Order.objects.get_or_create(item=item_obj)
+	order = Order.objects.filter(user=request.user, complete=False)
 
-	if created:
-		action="addItem"
+	qty = request.GET.get('qty', 1)
 
-	context = {
-		"action": action,
-	}
-	return JsonResponse(context, safe=False)
+	if order.exists():
+		order_obj=order.first()
+	else:
+		order_obj = Order.objects.create(user=request.user)
+	
+
+	item, create = OrderItem.objects.get_or_create(order=order_obj, item=item_obj)
+
+	if qty < 1:
+		item.delete()
+	else:
+		item.quantity = qty
+		item.save()
+
+	order_items = []
+	
+	for order_item in order_obj.orderitem_set.all():
+		order_items.append({
+			"name":order_item.item.name,
+			"quantity": order_item.quantity,
+			"price": order_item.item.price * order_item.quantity,
+			})
+	return JsonResponse(order_items, safe=False)
 
 # def removeItem(request, item_id):
+
 
 
 

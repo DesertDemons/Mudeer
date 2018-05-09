@@ -33,6 +33,7 @@ urlpatterns = [
 	path('update/<int:restaurant_id>/', views.update, name="update_rest"),
 	path('delete/<int:restaurant_id>/', views.delete, name="delete_rest"),
 
+	path('order/<int:item_id>/', views.order, name='order'),
 
 ]
 
