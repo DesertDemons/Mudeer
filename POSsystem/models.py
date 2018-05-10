@@ -44,11 +44,13 @@ class Order(models.Model):
 	dinner = models.BooleanField(default=False)
 	complete = models.BooleanField(default=False)
 
-	# def update_total(self):
-	# 	items = self.orderitem_set.all()
-	# 	for item in items:
-	# 		total += item.item_total
-	# 	self.save()
+
+
+	def update_total(self):
+		items = self.orderitem_set.all()
+		for item in items:
+			total += item.item_total
+		self.save()
 
 	
 	

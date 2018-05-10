@@ -241,10 +241,13 @@ def delete_item(request, item_id):
 def ordering_page(request,restaurant_id):
 	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
 
+	items = OrderItem.objects.all()
+
 	order_list = []
-	# items = request.user.order_set.all()
-	# for item in items:
-	# 	order_list.append(item)
+
+	for item in items:
+		order_list.append(item)
+	
 
 	context = {
 		"restaurant": restaurant_obj,
@@ -266,16 +269,23 @@ def order(request, item_id):
 
 	item, create = OrderItem.objects.get_or_create(order=order_obj, item=item_obj)
 
-	if qty < 1:
-		item.delete()
-	else:
+	if create:
+		print('created')
 		item.quantity = qty
 		item.save()
+	else:
+		if int(qty) < 1:
+			item.delete()
+		else:
+			item.quantity += 1
+			item.save()
+	
 
 	order_items = []
 	
 	for order_item in order_obj.orderitem_set.all():
 		order_items.append({
+			"id":order_item.item.id,
 			"name":order_item.item.name,
 			"quantity": order_item.quantity,
 			"price": order_item.item.price * order_item.quantity,

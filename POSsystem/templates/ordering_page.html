@@ -11,44 +11,25 @@
 
 
       
-      <table class="table">
+      <table class="table jumbotron border border-dark">
         <thead>
             <tr>
+                <th scope="col">Quantity</th>
                 <th scope="col">Name</th>
                 <th scope="col">Price</th>
                 <th scope="col"></th>
             </tr>
         </thead>
-        <tbody>
-            
-            <tr>
-                <td><span id="item-name-{{item.id}}"> </span></td>
-                <td><span id="price">  </span><span>  KWD</span></td>
-                <td>
-                    <a role="button" class="btn btn-danger"
-                     href="javascript:void(0);" onclick='RemoveItem("{{ item.id }}");'>
-                       <i class="fas fa-trash-alt"> Delete</i>
-                     </a>
-                </td>
-            </tr>
-            
-            <tr>
-                <th scope="row">Total</th>
-                <td><span id="item-total">  KWD</span></td>
-                <td></td>
-            </tr>
+        <tbody id="my-order-items">
+        </tbody>
+
+        <tbody id="my-order-total">
         </tbody>
     </table>
     
+    
 
-<div>
-  <span id="test-0"> </span>
-  <span id="test-1"> </span>
-  <span id="test-2"> </span>
-  <span id="test1"> </span>
-  <span id="test2"> </span>
-  <span id="additiondiv1"> </span>
-</div>
+
 
     <br><br><br>
 
@@ -75,7 +56,7 @@
                   <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
                   <div class="card-body">
                     <h4 class="card-title">
-                      <button class="btn btn-light" onclick="AddItem({{item.id}});">
+                      <button class="btn btn-light" onclick="AddItem({{item.id}}, 1);">
                           <p><strong> {{item.name}} </strong></p>
                     </h4>
                   </button>
@@ -99,7 +80,7 @@
             <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
             <div class="card-body">
               <h4 class="card-title">
-                <button class="btn btn-light" onclick="AddItem({{item.id}});">
+                <button class="btn btn-light" onclick="AddItem({{item.id}}, 1)">
                     <p><strong> {{item.name}} </strong></p>
               </h4>
             </button>
@@ -119,27 +100,39 @@
 
 
   <script type="text/javascript">
-  function AddItem(id){
+  function AddItem(id, quantity){
+    console.log(quantity)
+    let qty = quantity;
     $.ajax({
       type: "GET",
-      url: "/order/"+id,
+      url: "/order/"+id+"?qty="+qty,
       error:function(err){
         console.log("Error, something went wrong!");
         console.log(err);
       },
       success:function(data){
-        console.log(data);
-        $('#test1').text(data[0]['name']);
-        $('#test2').text(data[1]['name']);
-        $.each(data,function(index,value){ 
-            $.each(value, function(index2, value2) {
-                $('#price').text(value2);
-                $('#additiondiv1').text(index2);
-            });
-        });
+          let myTable = $('#my-order-items');
+          myTable.children().remove();
+          let myTableTotal = $('#my-order-total');
+          myTableTotal.children().remove();
+          let total=0.0;
+
+          for(let i = 0; i < data.length ; i ++)
+          {
+            myTable.append(
+              "<tr><td>"+data[i]['quantity']+"</td><td>"+data[i]['name']+"</td><td>"+data[i]['price']+" KWD</td><td><button class='btn btn-danger' onclick='AddItem("+data[i]['id']+", 0);' >Delete</button></td></tr>"
+              );
+            
+          total +=Number(data[i]['price']);
+          }
+          myTable.append(
+              "<tr><th> </th><th> </th><th>Total</th></tr><tr><td></td><td></td><td>"+total+" KWD</td><tr>"
+              );
       }
     })
-  }
+  };
+
+
 </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
