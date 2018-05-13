@@ -5,6 +5,7 @@ from .models import Restaurant, Category, Item, Order, OrderItem
 from django.http import Http404, JsonResponse
 from django.db.models import Q
 import json
+from django.contrib.auth.decorators import login_required
 
 
 def user_register(request):
@@ -46,15 +47,19 @@ def userlogout(request):
     return redirect("welcome")
 
 def welcome(request):
+
 	if not request.user.is_authenticated:
 		return render(request, "main.html", {})
 	else:
-		return redirect("profile_page")
+		return render(request, "welcome.html", {})
 
 
+@login_required(login_url='/login/')
 def profile(request):
 	if request.user.is_anonymous:
 		return redirect('login')
+
+
 	restaurants = Restaurant.objects.all()
 	restaurants = restaurants.order_by('name', 'established')
 	owner_name = request.user
@@ -71,6 +76,7 @@ def profile(request):
 		}
 	return render(request, 'profile_page.html', context)
 
+@login_required(login_url='/login/')
 def business_detail(request, restaurant_id):
 	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
 	context = {
@@ -79,7 +85,7 @@ def business_detail(request, restaurant_id):
 	return render(request, 'detail.html', context)
 
 
-
+@login_required(login_url='/login/')
 def create(request):
 	restaurant_form = RestaurantForm()
 	if request.method == "POST":
@@ -104,11 +110,8 @@ def update(request, restaurant_id):
 		raise Http404("You don't have permission")
 	form = RestaurantForm(instance=restaurant_obj)
 	if request.method == "POST":
-		form = RestaurantForm(request.POST, instance=restaurant_obj)
-		if request.POST.get("cancel"):
-				return redirect("profile_page")
-		else:
-			form.is_valid()
+		form = RestaurantForm(request.POST, request.FILES, instance=restaurant_obj)
+		if form.is_valid():
 			form.save()
 			return redirect("profile_page")
 	context = {
@@ -137,6 +140,10 @@ def categoryDetails(request, category_id):
 
 def addCategory(request, restaurant_id):
 	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
+	if not(request.user.is_staff or request.user==restaurant_obj.owner):
+		# return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+		raise Http404("You don't have permission")
+	
 	category_form = CategoryForm()
 	if request.method == "POST":
 		category_form = CategoryForm(request.POST)
@@ -189,6 +196,11 @@ def delete_category(request, category_id):
 
 def addItem(request, category_id):
 	category_obj = Category.objects.get(id=category_id)
+	restaurant_obj = Restaurant.objects.get(id=category_obj.restaurant.id)
+	if not(request.user.is_staff or request.user==restaurant_obj.owner):
+		# return HttpResponse("<h1>Error you are not the owner of the restaurant or staff member</h1>")
+		raise Http404("You don't have permission")
+	category_obj = Category.objects.get(id=category_id)
 	item_form = ItemForm()
 	if request.method == "POST":
 		item_form = ItemForm(request.POST)
@@ -240,7 +252,7 @@ def delete_item(request, item_id):
 
 def ordering_page(request,restaurant_id):
 	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
-
+	
 	items = OrderItem.objects.all()
 
 	order_list = []
@@ -295,7 +307,46 @@ def order(request, item_id):
 # def removeItem(request, item_id):
 
 
+def view_order(request, restaurant_id):
+	restaurant_obj = Restaurant.objects.get(id=restaurant_id)
 
+	orderItems = OrderItem.objects.all()
+	order_obj = Order.objects.get(user=request.user, complete=False)
+	
+	order_item_list = []
+	for order_item in order_obj.orderitem_set.all():
+		order_item_list.append({
+			"id":order_item.item.id,
+			"name":order_item.item.name,
+			"quantity": order_item.quantity,
+			"price": order_item.item.price * order_item.quantity,
+			})
+	order_total = order_obj.get_total()
+	order_obj.complete = removeOrderItems(order_obj.id)
+	
+
+	context = {
+		'restaurant': restaurant_obj,
+		'order_total': order_total,
+		'order_obj': order_obj,
+		'orderItems': orderItems,
+		'order_item_list': order_item_list,
+	}
+	return render(request, 'view_order.html', context)
+
+
+def removeOrderItems(order_id):
+	order_obj = Order.objects.get(id=order_id)
+	order_obj.orderitem_set.all().delete()
+	order_obj.complete = True
+	Order.objects.all().delete()
+	
+
+	context = {
+		'order_obj': order_obj,
+	}
+	return True
+	
 
 
 

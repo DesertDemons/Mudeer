@@ -5,15 +5,41 @@
   welcome
 {% endblock %}
 
+
+
 {% block content %}
+
+<!-- animate css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+<!-- header css -->
 	
-	
-	<h2 class="alert alert-primary mt-3 "> <center>Welcome to Mudeer Application to manage your business</center></h2>
-	<div class="container-fluid mt-2 ">
-		
-		
-		<center><img src="http://www.bematechus.com/wp-content/uploads/2015/02/restaurant-POS.jpg"></center>
+	<!-- <h2 class="alert alert-primary mt-3 "> <center>Welcome to Mudeer Application to manage your business</center></h2> -->
+
+	<!-- header #1 -->
+<header class="header" id="header1">
+	<div class="center">
+		<div class="caption animated fadeInDownBig">
+			<center>
+			<h2 class="title display-3 ">Welcome to <strong class="animated pulse text-warning">Mudeer</strong> Application to manage your business</h2>
+			<h4 class="text">With this application you can create your restarant menu categories, items, and start taking orders by your device</h4>
+			</center>
+			</div>
+			<center>
+			<a href="{% url 'register' %}"><button class="action btn btn-primary btn-lg animated fadeInLeftBig">Get Started!</button></a>
+			<a href="{% url 'login' %}"><button class="action btn btn-success btn-lg animated fadeInRightBig" >Login</button></a>
+			</center>
+			<br>
 	</div>
+	<!-- scroll-down -->
+	
+</header>
+
+	<br>
+  <div> 
+    <center><img src="http://www.bematechus.com/wp-content/uploads/2015/02/restaurant-POS.jpg" class="img2 animated flip"></center>
+  </div>
+
+
 
 {% endblock content %}
 

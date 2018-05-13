@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  welcome
+{% endblock %}
+
+
+
+{% block content %}
+		<div>
+			<h1 class="mt-5 mb-3">This is order summery :</h1>
+			<div class="ml-5">
+				<h4><strong>Employee Name:</strong> {{request.user.username}}</h4>
+				<h4><strong>Time of order :</strong>{% now "jS F Y H:i" %}</h4>
+			</div>
+		</div>
+<div class="row">
+                <div class="col-12" id="Bill-table">
+                    <table class="table jumbotron border border-dark mt-5">
+                        <thead>
+                            <tr class='table-secondary'>
+                            	<th scope="col">Quantity</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        
+                            {% for item in order_item_list %}
+                            <tr class='table-light'>
+                            	<td>{{item.quantity}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.price}}</td>
+                            </tr>
+                            {% endfor %}
+                            
+                            <tr>
+                            	<th> </th>
+                                <th>Total</th>
+                                <td>{{order_total}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <a onclick="window.print('#Bill-table');" href="{% url 'ordering_page' restaurant.id %}" >
+                        <button type="button" class="btn btn-primary no-print"  >Finish Order</button>
+                    </a>
+                </div>
+            </div>
+
+
+<script type="text/javascript">
+	
+</script>
+{% endblock content %}

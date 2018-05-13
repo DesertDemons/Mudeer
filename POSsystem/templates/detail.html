@@ -8,7 +8,9 @@ Buisiness Detail
 
 	 
 	<div class="col-md-12">
-		<h1 class="mt-5 ml-3"><strong>Restaurant name : {{restaurant_obj.name}}</strong></h1>
+		<img class="card-img-top1 mt-3 ml-5" src={{restaurant_obj.image.url}} alt="Card image cap">
+		
+		<h1 class=" ml-3"><strong>Restaurant name : {{restaurant_obj.name}}</strong></h1>
 	</div>
 	<div class="col-md-12">
 	<div class="col-sm-12 col-md-12 col-lg-12 mt-5 mb-5">
@@ -113,7 +115,9 @@ Buisiness Detail
 			
 				<a href="{% url 'profile_page' %}"><button type="button" class="ml-3 mr-5 mt-5 btn btn-dark btn-lg fa fa-arrow-circle-left">  Back</button></a>
 			</div>
-	</div>
+			<br>
+			<div class="mb-5"></div>
+	
 
 
 

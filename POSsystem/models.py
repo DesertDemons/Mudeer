@@ -8,6 +8,7 @@ class Restaurant(models.Model):
 	description = models.TextField()
 	established = models.DateField(auto_now_add=True)
 
+
 	def __str__(self):
 		return "Name: [" + self.name + "] " + self.description
 
@@ -45,12 +46,12 @@ class Order(models.Model):
 	complete = models.BooleanField(default=False)
 
 
-
-	def update_total(self):
-		items = self.orderitem_set.all()
-		for item in items:
-			total += item.item_total
-		self.save()
+	def get_total(self):
+		order_items = self.orderitem_set.all()
+		total = 0
+		for item in order_items:
+			total += (item.quantity * item.item.price)
+		return total
 
 	
 	

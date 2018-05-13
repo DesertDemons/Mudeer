@@ -14,13 +14,13 @@ Restaurant Update
 		<h1 class="mt-5 ml-3"><strong>Restaurant Name : {{restaurant_obj.name}}</strong></h1>
 	</div>
 	<div class="col-md-12 bg-dark mt-3 md-3 px-3 p-3">
-		<form class="jumbotron border border-primary" action="{% url 'update_rest' restaurant_id=restaurant_obj.id %}" method="POST">
+		<form class="jumbotron " action="{% url 'update_rest' restaurant_id=restaurant_obj.id %}" method="POST" enctype="multipart/form-data">
 			<h2> Updating Restaurant :</h2>
 			<br>
 		{% csrf_token %}
 		{{form|crispy}}
-		<input type="submit" name="Update">
-		<input type='submit' name="cancel" value="Cancel">
+		<input type="submit" name="create" value="Update" class="btn btn-success">
+			<a href="{% url 'profile_page' %}" class="btn btn-danger">Cancel</a>
 	</form>
 </div>
 </div>

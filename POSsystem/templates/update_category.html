@@ -19,8 +19,8 @@ Restaurant Update
 	<br>
 		{% csrf_token %}
 		{{form|crispy}}
-		<input type="submit" name="Update">
-		<input type='submit' name="cancel" value="Cancel">
+		<input type="submit" name="create" value="Save" class="btn btn-success">
+		<input type='submit' name="cancel" value="Cancel" class="btn btn-danger">
 	</form>
 </div>
 </div>

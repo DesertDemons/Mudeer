@@ -37,3 +37,42 @@ navbar-fixed-top {
     /* z-index: 1030; */
 }
 
+/* =======================================
+ header#1
+========================================*/
+#header1 {
+	background: #355c7d;
+  background:
+    linear-gradient(
+      rgba(53, 92, 125, 0.8), /* #355c7d */
+      rgba(108, 91, 123, 0.8), /* #6c5b7b */
+      rgba(192, 108, 123, 0.8) /* #c06c7b */
+    ),
+    url('https://cdn.stocksnap.io/img-thumbs/960w/LPPN6E2YK4.jpg') no-repeat left top;
+  background-size: cover;  
+	z-index: 0; /* bottom layout */
+}
+#header1 .caption {
+	text-align: center;
+  color: #fff;
+}
+#header1 .caption .title {
+	margin-bottom: 1.5rem;
+} 
+#header1 .caption .text {
+	margin-bottom: 1.5rem;
+}
+#header1 .caption .action {
+	margin-bottom: 1rem;
+	padding-left: 3rem;
+	padding-right: 3rem;
+	border-radius: 15px;
+}
+  
+.img2 {
+    
+    padding: 500px;
+    background: url('http://www.bematechus.com/wp-content/uploads/2015/02/restaurant-POS.jpg');
+    background-repeat: no-repeat;
+    background-size: 1000px 850px;
+}
